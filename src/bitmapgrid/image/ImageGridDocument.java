@@ -38,34 +38,41 @@ public class ImageGridDocument {
     }
     
     private void computeOrigins() {
-        // TODO: take out maximum dimensions computation into separate method
-        float totalWidth = 0.0f;
-        float totalHeight = 0.0f;
-        ArrayList<Float> rowMaxY = new ArrayList<Float>();
+        float vGap = (documentSize[1] - getGridHeight()) / (imageGrid.size() + 1);
+        float currY = vGap;
         for (ArrayList<ScaledImage> row : imageGrid) {
-            float rowMaxHeight = 0.0f;
-            for (ScaledImage img : row) {
-                float[] size = img.getSize();
-                totalWidth += size[0];
-                rowMaxHeight = Math.max(rowMaxHeight, size[1]);
-            }
-            rowMaxY.add(rowMaxHeight);
-            totalHeight += rowMaxHeight;
-            float hGap = (documentSize[0] - totalWidth) / (row.size() + 1);
+            float hGap = (documentSize[0] - getRowWidth(row)) / (row.size() + 1);
+            float rowHeight = getRowHeight(row);
             float currX = hGap;            
             for (ScaledImage img : row) {
-                img.setOriginX(currX);
+                img.setOrigin(new float[] {currX, currY + (rowHeight - img.getSize()[1]) * 0.5f});
                 currX += img.getSize()[0] + hGap;
             }
+            currY += vGap + rowHeight;
         }
-        float vGap = (documentSize[1] - totalHeight) / (imageGrid.size() + 1);
-        float currY = vGap;
-        Iterator<Float> iterMaxY = rowMaxY.iterator();
+    }
+
+    private float getRowWidth(ArrayList<ScaledImage> row) {
+        float res = 0.0f;
+        for (ScaledImage img : row) {
+            res += img.getSize()[0];
+        }
+        return res;
+    }
+
+    private float getRowHeight(ArrayList<ScaledImage> row) {
+        float res = 0.0f;
+        for (ScaledImage img : row) {
+            res = Math.max(res, img.getSize()[1]);
+        }
+        return res;
+    }
+
+    private float getGridHeight() {
+        float res = 0.0f;
         for (ArrayList<ScaledImage> row : imageGrid) {
-            float currMaxY = iterMaxY.next();
-            for (ScaledImage img : row) {
-                img.setOriginY(currY + (currMaxY - img.getSize()[1]) * 0.5f);
-            }
+            res += getRowHeight(row);
         }
+        return res;
     }
 }
