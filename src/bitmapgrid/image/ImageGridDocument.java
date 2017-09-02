@@ -2,7 +2,6 @@ package bitmapgrid.image;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class ImageGridDocument {
     
