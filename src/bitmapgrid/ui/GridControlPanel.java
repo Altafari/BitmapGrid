@@ -1,56 +1,42 @@
 package bitmapgrid.ui;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.text.NumberFormat;
 
-import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 
-public class GridControlPanel extends JPanel {
+public class GridControlPanel extends VerticallyStackedPanel {
 
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
     
-    private JFormattedTextField nColumns;
-    private JFormattedTextField nRows;
+    private JSpinner nColumns;
+    private SpinnerModel nColumnsModel;
+    private JSpinner nRows;
+    private SpinnerModel nRowsModel;
     private JFormattedTextField imageBorderWidth;
     private JFormattedTextField groupBorderWidth;
     private JComboBox packingMode;
     
-    private final Dimension preferredFieldSize = new Dimension(60, 18);
-    
     public GridControlPanel() {
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        nColumns = new JFormattedTextField(NumberFormat.getIntegerInstance());
-        nColumns.setPreferredSize(preferredFieldSize);
-        nRows = new JFormattedTextField(NumberFormat.getIntegerInstance());
-        nRows.setPreferredSize(preferredFieldSize);
+        nColumnsModel = new SpinnerNumberModel(1, 1, 5, 1);
+        nColumns = new JSpinner(nColumnsModel);
+        
+        nRowsModel = new SpinnerNumberModel(1, 1, 4, 1);        
+        nRows = new JSpinner(nRowsModel);
         imageBorderWidth = new JFormattedTextField(NumberFormat.getNumberInstance());
-        imageBorderWidth.setPreferredSize(preferredFieldSize);
+        imageBorderWidth.setHorizontalAlignment(JFormattedTextField.TRAILING);
         groupBorderWidth = new JFormattedTextField(NumberFormat.getNumberInstance());
-        groupBorderWidth.setPreferredSize(preferredFieldSize);
-        JPanel nColumnsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        nColumnsPanel.add(new JLabel("Num. columns"));
-        nColumnsPanel.add(nColumns);
-        JPanel nRowsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        nRowsPanel.add(new JLabel("Num. rows"));
-        nRowsPanel.add(nRows);
-        JPanel imageBorderWidthPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        imageBorderWidthPanel.add(new JLabel("Image border"));
-        imageBorderWidthPanel.add(imageBorderWidth);
-        JPanel groupBorderWidthPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        groupBorderWidthPanel.add(new JLabel("Group border"));
-        groupBorderWidthPanel.add(groupBorderWidth);
-        this.add(nColumnsPanel);
-        this.add(nRowsPanel);
-        this.add(imageBorderWidthPanel);
-        this.add(groupBorderWidthPanel);
+        groupBorderWidth.setHorizontalAlignment(JFormattedTextField.TRAILING);
+        
+        addLabeledComponent(nColumns, "Num. cols");
+        addLabeledComponent(nRows, "Num. rows");
+        addLabeledComponent(imageBorderWidth, "Image border");
+        addLabeledComponent(groupBorderWidth, "Group border");
     }
-
 }

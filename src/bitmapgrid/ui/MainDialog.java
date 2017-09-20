@@ -25,7 +25,7 @@ public class MainDialog {
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setPreferredSize(new Dimension(60, 70));
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Image", new JPanel());
+        tabbedPane.addTab("Image", new ImageControlPanel());
         tabbedPane.addTab("Arrangement", new GridControlPanel());
         mainPanel.add(tabbedPane, BorderLayout.LINE_START);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
