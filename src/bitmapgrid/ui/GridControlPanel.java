@@ -2,6 +2,7 @@ package bitmapgrid.ui;
 
 import java.text.NumberFormat;
 
+import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JSpinner;
@@ -38,5 +39,6 @@ public class GridControlPanel extends VerticallyStackedPanel {
         addLabeledComponent(nRows, "Num. rows");
         addLabeledComponent(imageBorderWidth, "Image border");
         addLabeledComponent(groupBorderWidth, "Group border");
+        add(Box.createVerticalGlue());
     }
 }

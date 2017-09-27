@@ -11,8 +11,9 @@ import javax.swing.JPanel;
 
 public abstract class VerticallyStackedPanel extends JPanel {
 
+    protected final Dimension PREFERRED_SIZE = new Dimension(60, 20);
+
     private static final long serialVersionUID = 1L;
-    private final Dimension preferredComponentSize = new Dimension(60, 18);
     private final int LEFT_INSET = 5;
     
     public VerticallyStackedPanel() {
@@ -36,6 +37,6 @@ public abstract class VerticallyStackedPanel extends JPanel {
     }
     
     protected Dimension getPreferredComponentSize(){
-        return preferredComponentSize;
+        return PREFERRED_SIZE;
     }
 }
