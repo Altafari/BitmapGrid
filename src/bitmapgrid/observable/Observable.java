@@ -1,14 +1,14 @@
 package bitmapgrid.observable;
 
 public class Observable<T> extends ObservableCore<T> implements IObserver<T> {
-    
+
     protected T value;
-    
+
     public Observable() {
         super();
         value = null;
     }
-    
+
     public Observable(T val) {
         super();
         value = val;
@@ -17,11 +17,11 @@ public class Observable<T> extends ObservableCore<T> implements IObserver<T> {
     @Override
     public void notifyChanged(T val) {
         value = val;
-        notifyObservers(value);            
+        notifyObservers(value);
     }
 
     @Override
-    public T getValue() {
+    public T getObservableValue() {
         return value;
-    }    
+    }
 }

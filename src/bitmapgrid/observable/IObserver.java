@@ -2,5 +2,5 @@ package bitmapgrid.observable;
 
 public interface IObserver<T> {
 
-    void notifyChanged(T newVal);    
+    void notifyChanged(T newVal);
 }

@@ -14,11 +14,11 @@ public class GridControlPanel extends VerticallyStackedPanel {
 
     public IObservable<double[]> panelDimension;
     public IObservable<int[]> panelFragments;
-    
+
     private IObservable<int[]> maxFragments;
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private JFormattedTextField panelWidth;
     private JFormattedTextField panelHeight;
     private JSpinner nColumns;
@@ -28,22 +28,22 @@ public class GridControlPanel extends VerticallyStackedPanel {
     private JFormattedTextField imageBorderWidth;
     private JFormattedTextField groupBorderWidth;
     private JComboBox packingMode;
-    
+
     public GridControlPanel() {
         panelWidth = new JFormattedTextField(NumberFormat.getInstance());
 
         panelHeight = new JFormattedTextField(NumberFormat.getInstance());
-        
+
         nColumnsModel = new SpinnerNumberModel(1, 1, 5, 1);
-        nColumns = new JSpinner(nColumnsModel);        
-        nRowsModel = new SpinnerNumberModel(1, 1, 4, 1);        
+        nColumns = new JSpinner(nColumnsModel);
+        nRowsModel = new SpinnerNumberModel(1, 1, 4, 1);
         nRows = new JSpinner(nRowsModel);
 
         imageBorderWidth = new JFormattedTextField(NumberFormat.getNumberInstance());
         imageBorderWidth.setHorizontalAlignment(JFormattedTextField.TRAILING);
         groupBorderWidth = new JFormattedTextField(NumberFormat.getNumberInstance());
         groupBorderWidth.setHorizontalAlignment(JFormattedTextField.TRAILING);
-        
+
         addLabeledComponent(panelWidth, "Panel width");
         addLabeledComponent(panelHeight, "Panel height");
         addLabeledComponent(nColumns, "Columns");

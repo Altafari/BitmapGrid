@@ -15,15 +15,15 @@ public abstract class VerticallyStackedPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private final int LEFT_INSET = 5;
-    
+
     public VerticallyStackedPanel() {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
     }
-    
+
     protected void addLabeledComponent(Component comp, String label) {
         addLabeledComponent(comp, label, getPreferredComponentSize());
     }
-    
+
     protected void addLabeledComponent(Component comp, String label, Dimension componentSize) {
         comp.setPreferredSize(componentSize);
         JPanel panel = new JPanel();
@@ -35,8 +35,8 @@ public abstract class VerticallyStackedPanel extends JPanel {
         panel.add(compPanel);
         add(panel);
     }
-    
-    protected Dimension getPreferredComponentSize(){
+
+    protected Dimension getPreferredComponentSize() {
         return PREFERRED_SIZE;
     }
 }

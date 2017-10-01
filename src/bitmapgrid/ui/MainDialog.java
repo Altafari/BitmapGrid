@@ -19,7 +19,7 @@ public class MainDialog {
         frame.setVisible(true);
         frame.setResizable(false);
     }
-    
+
     private static void addComponentsToPane(Container pane) {
         JPanel mainPanel = new JPanel();
         JScrollPane scrollPane = new JScrollPane();
@@ -31,12 +31,12 @@ public class MainDialog {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         pane.add(mainPanel);
     }
-    
+
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
             }
-        });       
+        });
     }
 }

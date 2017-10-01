@@ -21,11 +21,11 @@ import bitmapgrid.observable.IObservable;
 import bitmapgrid.observable.Observable;
 
 public class ImageControlPanel extends VerticallyStackedPanel {
-    
+
     public final Observable<BufferedImage> image;
     public final IObservable<int[]> imageSize;
     public final IObservable<double[]> imageDimensions;
-    public final Observable<Double> dpi;    
+    public final Observable<Double> dpi;
 
     private static final long serialVersionUID = 1L;
 
@@ -35,13 +35,14 @@ public class ImageControlPanel extends VerticallyStackedPanel {
     private InfoTextField<File> fileNameLabel;
     private JFileChooser fileChooser;
     private Observable<File> file;
-    private JButton selectFileButton;    
-    
+    private JButton selectFileButton;
+
     public ImageControlPanel() {
         dpi = new Observable<Double>();
 
         imageSizeLabel = new InfoTextField<int[]>() {
             private static final long serialVersionUID = 1L;
+
             @Override
             public void notifyChanged(int[] newVal) {
                 if (newVal != null) {
@@ -51,9 +52,10 @@ public class ImageControlPanel extends VerticallyStackedPanel {
                 }
             }
         };
-        
+
         imageDimsLabel = new InfoTextField<double[]>() {
             private static final long serialVersionUID = 1L;
+
             @Override
             public void notifyChanged(double[] newVal) {
                 if (newVal != null) {
@@ -61,16 +63,17 @@ public class ImageControlPanel extends VerticallyStackedPanel {
                 } else {
                     setText("N/A");
                 }
-            }  
+            }
         };
-        
+
         dpiField = new JFormattedTextField(NumberFormat.getNumberInstance());
         dpiField.setHorizontalAlignment(JFormattedTextField.RIGHT);
         dpiField.addActionListener(a -> dpi.notifyChanged(((Number) dpiField.getValue()).doubleValue()));
         dpi.addObserver(val -> dpiField.setValue(val));
-        
+
         fileNameLabel = new InfoTextField<File>() {
             private static final long serialVersionUID = 1L;
+
             public void notifyChanged(File newVal) {
                 if (newVal != null) {
                     setText(newVal.getName());
@@ -78,26 +81,28 @@ public class ImageControlPanel extends VerticallyStackedPanel {
                     setText("");
                 }
             }
+
             @Override
             protected int getAlignment() {
                 return JTextField.LEFT;
             }
         };
-        
+
         file = new Observable<File>();
         file.addObserver(fileNameLabel);
         fileChooser = new JFileChooser();
         selectFileButton = new JButton("Select");
-        selectFileButton.addActionListener(a ->  { 
-            if(fileChooser.showOpenDialog(ImageControlPanel.this) == JFileChooser.APPROVE_OPTION) {
+        selectFileButton.addActionListener(a -> {
+            if (fileChooser.showOpenDialog(ImageControlPanel.this) == JFileChooser.APPROVE_OPTION) {
                 file.notifyChanged(fileChooser.getSelectedFile());
-            }                
+            }
         });
-        
+
         image = new Observable<BufferedImage>();
-        
+
         IObservable<BufferedImage> imageMapper = new FunctionMapper<File, BufferedImage>(file, f -> {
-            if (f == null) return null;
+            if (f == null)
+                return null;
             try {
                 BufferedImage img = ImageIO.read(f);
                 if (img == null) {
@@ -110,23 +115,20 @@ public class ImageControlPanel extends VerticallyStackedPanel {
                 return null;
             }
         });
-        
+
         imageMapper.addObserver(image);
-        
-        imageSize = new FunctionMapper<BufferedImage, int[]>(
-                image,
-                i -> (i == null) ? null : new int[] { i.getWidth(), i.getHeight() });        
+
+        imageSize = new FunctionMapper<BufferedImage, int[]>(image,
+                i -> (i == null) ? null : new int[] { i.getWidth(), i.getHeight() });
         imageSize.addObserver(imageSizeLabel);
-        
-        imageDimensions = new BinaryCombiner<int[], Double, double[]>(
-                imageSize,
-                dpi,
+
+        imageDimensions = new BinaryCombiner<int[], Double, double[]>(imageSize, dpi,
                 (size, dpi) -> (size == null || dpi == null) ? null : computeImageDimensions(dpi, size));
         imageDimensions.addObserver(imageDimsLabel);
-        
+
         image.notifyChanged(null);
         dpi.notifyChanged(900.0);
-        
+
         addLabeledComponent(imageSizeLabel, "Image size");
         addLabeledComponent(imageDimsLabel, "Image dims");
         addLabeledComponent(dpiField, "Image DPI");
@@ -134,12 +136,12 @@ public class ImageControlPanel extends VerticallyStackedPanel {
         addLabeledComponent(selectFileButton, "", new Dimension(90, 20));
         add(Box.createVerticalGlue());
     }
-    
+
     @Override
     protected Dimension getPreferredComponentSize() {
         return new Dimension(100, this.PREFERRED_SIZE.height);
     }
-    
+
     private double[] computeImageDimensions(Double dpi, int[] size) {
         return new double[] { (size[0] * 25.4) / dpi, (size[1] * 25.4) / dpi };
     }

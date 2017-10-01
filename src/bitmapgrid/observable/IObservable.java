@@ -6,6 +6,6 @@ public interface IObservable<T> {
 
     boolean removeObserver(IObserver<T> obs);
 
-    T getValue();
+    T getObservableValue();
 
 }

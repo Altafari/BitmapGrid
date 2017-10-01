@@ -5,8 +5,8 @@ import java.util.Set;
 
 public abstract class ObservableCore<T> implements IObservable<T> {
 
-    protected final Set<IObserver<T>> observers;    
-    
+    protected final Set<IObserver<T>> observers;
+
     public ObservableCore() {
         observers = new LinkedHashSet<IObserver<T>>();
     }
@@ -22,10 +22,10 @@ public abstract class ObservableCore<T> implements IObservable<T> {
     }
 
     @Override
-    public abstract T getValue();
-    
-    protected void notifyObservers(T value) {
-        for(IObserver<T> obs : observers) {
+    public abstract T getObservableValue();
+
+    public void notifyObservers(T value) {
+        for (IObserver<T> obs : observers) {
             obs.notifyChanged(value);
         }
     }

@@ -2,7 +2,7 @@ package bitmapgrid.ui;
 
 import javax.swing.JPanel;
 
-public class ImageGridView extends JPanel{
+public class ImageGridView extends JPanel {
 
     /**
      * 

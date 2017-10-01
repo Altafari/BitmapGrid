@@ -12,10 +12,10 @@ public abstract class InfoTextField<T> extends JTextField implements IObserver<T
         setEditable(false);
         setHorizontalAlignment(getAlignment());
     }
-    
+
     @Override
     public abstract void notifyChanged(T newVal);
-    
+
     protected int getAlignment() {
         return RIGHT;
     }
