@@ -47,6 +47,7 @@ public abstract class ReactiveSpinner<T> extends JSpinner implements IObserver<T
 
     @Override
     public void notifyChanged(T newVal) {
+        // ???
         this.setValue(newVal);
     }
 
