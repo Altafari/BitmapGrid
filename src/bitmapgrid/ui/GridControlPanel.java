@@ -8,6 +8,7 @@ import javax.swing.JFormattedTextField;
 import bitmapgrid.controls.ReactiveIntegerSpinner;
 import bitmapgrid.controls.ReactiveNumberField;
 import bitmapgrid.observable.BinaryCombiner;
+import bitmapgrid.observable.HubConnector;
 import bitmapgrid.observable.IConnectable;
 import bitmapgrid.observable.IObservable;
 
@@ -60,14 +61,12 @@ public class GridControlPanel extends VerticallyStackedPanel implements IConnect
     }
 
     @Override
-    public void addObservablesToMap(Map<String, Object> map) {
-        map.put("PanelWidth", panelWidth.observable);
+    public void onPublication(HubConnector hub) {
         
     }
 
     @Override
-    public void wireUpObservables(Map<String, Object> map) {
-        // TODO Auto-generated method stub
-        
+    public void onSubscription(HubConnector hub) {
+
     }
 }
