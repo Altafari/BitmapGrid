@@ -12,6 +12,9 @@ public class ReactiveNumberField extends ReactiveFormattedTextField<Double> {
 
     @Override
     protected Double extractValue(Object obj) {
+        if (obj == null) {
+            return null;
+        }
         return ((Number) obj).doubleValue();
     }
 

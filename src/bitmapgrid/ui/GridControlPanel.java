@@ -1,51 +1,54 @@
 package bitmapgrid.ui;
 
-import java.text.NumberFormat;
 import javax.swing.Box;
 import javax.swing.JFormattedTextField;
 
 import bitmapgrid.controls.ReactiveIntegerSpinner;
+import bitmapgrid.controls.ReactiveNumberField;
+import bitmapgrid.observable.BinaryCombiner;
 import bitmapgrid.observable.IObservable;
 
 public class GridControlPanel extends VerticallyStackedPanel {
 
-    public IObservable<double[]> panelDimension;
-    public IObservable<int[]> panelFragments;
-
-    // private IObservable<int[]> maxFragments;
+    // public final IObservable<double[]> panelDimension;
+    // public final IObservable<int[]> tilesNumber;
 
     private static final long serialVersionUID = 1L;
 
-    private JFormattedTextField panelWidth;
-    private JFormattedTextField panelHeight;
+    private ReactiveNumberField panelWidth;
+    private ReactiveNumberField panelHeight;
     private ReactiveIntegerSpinner nColumns;
     private ReactiveIntegerSpinner nRows;
-    private JFormattedTextField imageBorderWidth;
-    private JFormattedTextField groupBorderWidth;
+    private ReactiveNumberField imageBorderWidth;
+    private ReactiveNumberField groupBorderWidth;
+
+    private IObservable<double[]> imageSize;
     // private JComboBox packingMode;
 
     public GridControlPanel() {
-        panelWidth = new JFormattedTextField(NumberFormat.getInstance());
 
-        panelHeight = new JFormattedTextField(NumberFormat.getInstance());
+        panelWidth = new ReactiveNumberField();
+        panelHeight = new ReactiveNumberField();
 
-        nColumns = new ReactiveIntegerSpinner(1, 1, 5);
+        nColumns = new ReactiveIntegerSpinner();
         nRows = new ReactiveIntegerSpinner();
-        nColumns.observable.addObserver(nRows.maxValue);
 
-        ReactiveIntegerSpinner mSp = new ReactiveIntegerSpinner(1, 1, 5);
-        mSp.observable.addObserver(nRows);
+        imageBorderWidth = new ReactiveNumberField();
+        groupBorderWidth = new ReactiveNumberField();
 
-        imageBorderWidth = new JFormattedTextField(NumberFormat.getNumberInstance());
-        imageBorderWidth.setHorizontalAlignment(JFormattedTextField.TRAILING);
-        groupBorderWidth = new JFormattedTextField(NumberFormat.getNumberInstance());
-        groupBorderWidth.setHorizontalAlignment(JFormattedTextField.TRAILING);
+        // TODO: This is a stub. Needs to be wired up properly.
+        imageSize = new BinaryCombiner<Double, Double, double[]>(imageBorderWidth.observable,
+                groupBorderWidth.observable, (w, h) -> new double[] { w, h });
+
+        IObservable<Integer> maxColumns = new BinaryCombiner<Double, double[], Integer>(panelWidth.observable,
+                imageSize, (w, s) -> (int) Math.floor(w / s[0]));
+        maxColumns.addObserver(nColumns.maxValue);
+        IObservable<Integer> maxRows = new BinaryCombiner<Double, double[], Integer>(panelHeight.observable, imageSize,
+                (h, s) -> (int) Math.floor(h / s[1]));
+        maxRows.addObserver(nRows.maxValue);
 
         addLabeledComponent(panelWidth, "Panel width");
         addLabeledComponent(panelHeight, "Panel height");
-
-        addLabeledComponent(mSp, "Master");
-
         addLabeledComponent(nColumns, "Columns");
         addLabeledComponent(nRows, "Rows");
         addLabeledComponent(imageBorderWidth, "Image border");
