@@ -1,14 +1,17 @@
 package bitmapgrid.ui;
 
+import java.util.Map;
+
 import javax.swing.Box;
 import javax.swing.JFormattedTextField;
 
 import bitmapgrid.controls.ReactiveIntegerSpinner;
 import bitmapgrid.controls.ReactiveNumberField;
 import bitmapgrid.observable.BinaryCombiner;
+import bitmapgrid.observable.IConnectable;
 import bitmapgrid.observable.IObservable;
 
-public class GridControlPanel extends VerticallyStackedPanel {
+public class GridControlPanel extends VerticallyStackedPanel implements IConnectable {
 
     // public final IObservable<double[]> panelDimension;
     // public final IObservable<int[]> tilesNumber;
@@ -54,5 +57,17 @@ public class GridControlPanel extends VerticallyStackedPanel {
         addLabeledComponent(imageBorderWidth, "Image border");
         addLabeledComponent(groupBorderWidth, "Group border");
         add(Box.createVerticalGlue());
+    }
+
+    @Override
+    public void addObservablesToMap(Map<String, Object> map) {
+        map.put("PanelWidth", panelWidth.observable);
+        
+    }
+
+    @Override
+    public void wireUpObservables(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        
     }
 }
