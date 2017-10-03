@@ -1,16 +1,14 @@
 package bitmapgrid.ui;
 
-import java.util.Map;
-
 import javax.swing.Box;
-import javax.swing.JFormattedTextField;
 
 import bitmapgrid.controls.ReactiveIntegerSpinner;
 import bitmapgrid.controls.ReactiveNumberField;
 import bitmapgrid.observable.BinaryCombiner;
-import bitmapgrid.observable.HubConnector;
 import bitmapgrid.observable.IConnectable;
 import bitmapgrid.observable.IObservable;
+import bitmapgrid.observable.IPublicationVisitor;
+import bitmapgrid.observable.ISubscriptionVisitor;
 
 public class GridControlPanel extends VerticallyStackedPanel implements IConnectable {
 
@@ -26,7 +24,6 @@ public class GridControlPanel extends VerticallyStackedPanel implements IConnect
     private ReactiveNumberField imageBorderWidth;
     private ReactiveNumberField groupBorderWidth;
 
-    private IObservable<double[]> imageSize;
     // private JComboBox packingMode;
 
     public GridControlPanel() {
@@ -40,17 +37,6 @@ public class GridControlPanel extends VerticallyStackedPanel implements IConnect
         imageBorderWidth = new ReactiveNumberField();
         groupBorderWidth = new ReactiveNumberField();
 
-        // TODO: This is a stub. Needs to be wired up properly.
-        imageSize = new BinaryCombiner<Double, Double, double[]>(imageBorderWidth.observable,
-                groupBorderWidth.observable, (w, h) -> new double[] { w, h });
-
-        IObservable<Integer> maxColumns = new BinaryCombiner<Double, double[], Integer>(panelWidth.observable,
-                imageSize, (w, s) -> (int) Math.floor(w / s[0]));
-        maxColumns.addObserver(nColumns.maxValue);
-        IObservable<Integer> maxRows = new BinaryCombiner<Double, double[], Integer>(panelHeight.observable, imageSize,
-                (h, s) -> (int) Math.floor(h / s[1]));
-        maxRows.addObserver(nRows.maxValue);
-
         addLabeledComponent(panelWidth, "Panel width");
         addLabeledComponent(panelHeight, "Panel height");
         addLabeledComponent(nColumns, "Columns");
@@ -61,12 +47,18 @@ public class GridControlPanel extends VerticallyStackedPanel implements IConnect
     }
 
     @Override
-    public void onPublication(HubConnector hub) {
+    public void onPublication(IPublicationVisitor pub) {
         
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void onSubscription(HubConnector hub) {
-
+    public void onSubscription(ISubscriptionVisitor sub) {
+        IObservable<double[]> imageDimensions = (IObservable<double[]>) sub.retrieveObservable("imageDimensions");
+        
+        IObservable<Integer> maxColumns = new BinaryCombiner<Double, double[], Integer>(panelWidth.observable, imageDimensions, (w, s) -> (int) Math.floor(w / s[0]));
+        maxColumns.addObserver(nColumns.maxValue);
+        IObservable<Integer> maxRows = new BinaryCombiner<Double, double[], Integer>(panelHeight.observable, imageDimensions, (h, s) -> (int) Math.floor(h / s[1]));
+        maxRows.addObserver(nRows.maxValue);
     }
 }

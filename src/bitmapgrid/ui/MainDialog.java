@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+import bitmapgrid.observable.HubConnector;
+
 public class MainDialog {
     private static void createAndShowGUI() {
         JFrame frame = new JFrame("BitmapGrid");
@@ -24,11 +26,17 @@ public class MainDialog {
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setPreferredSize(new Dimension(60, 70));
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Image", new ImageControlPanel());
-        tabbedPane.addTab("Arrangement", new GridControlPanel());
+        ImageControlPanel imPanel = new ImageControlPanel();
+        GridControlPanel grPanel = new GridControlPanel(); 
+        HubConnector hub = new HubConnector();
+        hub.connectables.add(imPanel);
+        hub.connectables.add(grPanel);
+        tabbedPane.addTab("Image", imPanel);
+        tabbedPane.addTab("Arrangement", grPanel);
         mainPanel.add(tabbedPane, BorderLayout.LINE_START);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         pane.add(mainPanel);
+        hub.wireUp();
     }
 
     public static void main(String[] args) {

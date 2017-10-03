@@ -17,10 +17,13 @@ import javax.swing.JTextField;
 import bitmapgrid.controls.InfoTextField;
 import bitmapgrid.observable.BinaryCombiner;
 import bitmapgrid.observable.FunctionMapper;
+import bitmapgrid.observable.IConnectable;
 import bitmapgrid.observable.IObservable;
+import bitmapgrid.observable.IPublicationVisitor;
+import bitmapgrid.observable.ISubscriptionVisitor;
 import bitmapgrid.observable.Observable;
 
-public class ImageControlPanel extends VerticallyStackedPanel {
+public class ImageControlPanel extends VerticallyStackedPanel implements IConnectable {
 
     public final Observable<BufferedImage> image;
     public final IObservable<int[]> imageSize;
@@ -118,12 +121,10 @@ public class ImageControlPanel extends VerticallyStackedPanel {
 
         imageMapper.addObserver(image);
 
-        imageSize = new FunctionMapper<BufferedImage, int[]>(image,
-                i -> (i == null) ? null : new int[] { i.getWidth(), i.getHeight() });
+        imageSize = new FunctionMapper<BufferedImage, int[]>(image, i -> new int[] { i.getWidth(), i.getHeight() });
         imageSize.addObserver(imageSizeLabel);
 
-        imageDimensions = new BinaryCombiner<int[], Double, double[]>(imageSize, dpi,
-                (size, dpi) -> (size == null || dpi == null) ? null : computeImageDimensions(dpi, size));
+        imageDimensions = new BinaryCombiner<int[], Double, double[]>(imageSize, dpi, (size, dpi) -> computeImageDimensions(dpi, size));
         imageDimensions.addObserver(imageDimsLabel);
 
         image.notifyChanged(null);
@@ -145,4 +146,12 @@ public class ImageControlPanel extends VerticallyStackedPanel {
     private double[] computeImageDimensions(Double dpi, int[] size) {
         return new double[] { (size[0] * 25.4) / dpi, (size[1] * 25.4) / dpi };
     }
+
+    @Override
+    public void onPublication(IPublicationVisitor pub) {
+        pub.publishObservable("imageDimensions", imageDimensions);
+    }
+
+    @Override
+    public void onSubscription(ISubscriptionVisitor sub) { }
 }

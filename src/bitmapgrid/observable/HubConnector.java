@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HubConnector {
+public class HubConnector implements IPublicationVisitor, ISubscriptionVisitor {
     
     public final ArrayList<IConnectable> connectables; 
     public final Map<String, Object> nodes;
@@ -23,6 +23,7 @@ public class HubConnector {
         }
     }
     
+    @Override
     public void publishObservable(String name, Object obs) {
         if (nodes.containsKey(name)) {
             throw new IllegalArgumentException("Name " + name + " is already published");
@@ -30,6 +31,7 @@ public class HubConnector {
         nodes.put(name, obs);
     }
     
+    @Override
     public Object retrieveObservable(String name) {
         if (!nodes.containsKey(name)) {
             throw new IllegalArgumentException("Name " + name + "is not published");

@@ -10,12 +10,14 @@ public class FunctionMapper<T, R> extends ObservableCore<R> {
     public FunctionMapper(IObservable<T> x, Function<T, R> func) {
         this.x = x;
         this.func = func;
-        x.addObserver((s) -> notifyObservers(func.apply(s)));
+        x.addObserver((s) -> notifyObservers((s == null)? null : func.apply(s)));
     }
 
     @Override
     public R getObservableValue() {
-        return func.apply(x.getObservableValue());
+        T xVal = x.getObservableValue();
+        if (xVal == null) return null;
+        return func.apply(xVal);
     }
 
 }

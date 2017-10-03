@@ -2,6 +2,6 @@ package bitmapgrid.observable;
 
 public interface IConnectable {
 
-    void onPublication(HubConnector hub);
-    void onSubscription(HubConnector hub);
+    void onPublication(IPublicationVisitor pub);
+    void onSubscription(ISubscriptionVisitor sub);
 }

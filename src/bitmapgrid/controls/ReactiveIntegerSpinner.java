@@ -12,9 +12,10 @@ public class ReactiveIntegerSpinner extends ReactiveSpinner<Integer> {
 
         @Override
         public void notifyChanged(Integer newMaxVal) {
+            if (newMaxVal == null) return;
             SpinnerNumberModel model = (SpinnerNumberModel) getModel();
             model.setValue(Math.min((int) model.getValue(), newMaxVal));
-            model.setMaximum(newMaxVal);
+            model.setMaximum(Math.max(newMaxVal, (int) model.getMinimum()));
         }
     };
 
