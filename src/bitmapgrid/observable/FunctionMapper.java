@@ -16,7 +16,9 @@ public class FunctionMapper<T, R> extends ObservableCore<R> {
     @Override
     public R getObservableValue() {
         T xVal = x.getObservableValue();
-        if (xVal == null) return null;
+        if (xVal == null){
+            return null;
+        }
         return func.apply(xVal);
     }
 

@@ -14,14 +14,24 @@ public class BinaryCombiner<U, V, R> extends ObservableCore<R> {
         this.y = y;
         this.func = func;
         x.addObserver((s) -> {
-            V yVal = y.getObservableValue();
-            R res = (s != null && yVal != null) ? func.apply(s, yVal) : null;
+            R res = null;
+            if (s != null) {
+                V yVal = y.getObservableValue();
+                if (yVal != null) {
+                    res = func.apply(s, yVal);
+                }
+            }
             notifyObservers(res);
         });
 
         y.addObserver((s) -> {
-            U xVal = x.getObservableValue();
-            R res = (s != null && xVal != null) ? func.apply(xVal, s) : null;
+            R res = null;
+            if (s != null) {
+                U xVal = x.getObservableValue();
+                if (xVal != null) {
+                    res = func.apply(xVal, s);
+                }
+            }
             notifyObservers(res);
         });
     }
@@ -29,10 +39,13 @@ public class BinaryCombiner<U, V, R> extends ObservableCore<R> {
     @Override
     public R getObservableValue() {
         U xVal = x.getObservableValue();
-        V yVal = y.getObservableValue();
-        if (xVal != null && yVal != null) {
-            return func.apply(x.getObservableValue(), y.getObservableValue());
+        if (xVal == null){
+            return null;
         }
-        return null;
+        V yVal = y.getObservableValue();
+        if (yVal == null){
+            return null;
+        }
+        return func.apply(x.getObservableValue(), y.getObservableValue());
     }
 }
