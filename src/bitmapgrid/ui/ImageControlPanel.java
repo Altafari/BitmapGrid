@@ -153,5 +153,5 @@ public class ImageControlPanel extends VerticallyStackedPanel implements IConnec
     }
 
     @Override
-    public void onSubscription(ISubscriptionVisitor sub) { }
+    public void onSubscription(ISubscriptionVisitor sub) {}
 }

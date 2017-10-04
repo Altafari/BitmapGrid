@@ -27,7 +27,7 @@ public class MainDialog {
         scrollPane.setPreferredSize(new Dimension(60, 70));
         JTabbedPane tabbedPane = new JTabbedPane();
         ImageControlPanel imPanel = new ImageControlPanel();
-        GridControlPanel grPanel = new GridControlPanel(); 
+        GridControlPanel grPanel = new GridControlPanel();
         HubConnector hub = new HubConnector();
         hub.connectables.add(imPanel);
         hub.connectables.add(grPanel);

@@ -8,8 +8,7 @@ public class ImageGridDocument {
     private float[] documentSize;
     private ArrayList<ArrayList<ScaledImage>> imageGrid;
 
-    public ImageGridDocument() {
-    };
+    public ImageGridDocument() {};
 
     public void drawDocument(Graphics g) {
 
