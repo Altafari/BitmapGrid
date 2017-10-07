@@ -9,20 +9,21 @@ import bitmapgrid.observable.IConnectable;
 import bitmapgrid.observable.IObservable;
 import bitmapgrid.observable.IPublicationVisitor;
 import bitmapgrid.observable.ISubscriptionVisitor;
+import bitmapgrid.observable.Observable;
 
 public class GridControlPanel extends VerticallyStackedPanel implements IConnectable {
 
-    // public final IObservable<double[]> panelDimension;
-    // public final IObservable<int[]> tilesNumber;
+    public final IObservable<double[]> panelDimension;
+    public final IObservable<int[]> tilesNumber;
 
     private static final long serialVersionUID = 1L;
 
-    private ReactiveNumberField panelWidth;
-    private ReactiveNumberField panelHeight;
-    private ReactiveIntegerSpinner nColumns;
-    private ReactiveIntegerSpinner nRows;
-    private ReactiveNumberField imageBorderWidth;
-    private ReactiveNumberField groupBorderWidth;
+    private final ReactiveNumberField panelWidth;
+    private final ReactiveNumberField panelHeight;
+    private final ReactiveIntegerSpinner nColumns;
+    private final ReactiveIntegerSpinner nRows;
+    private final ReactiveNumberField imageBorderWidth;
+    private final ReactiveNumberField groupBorderWidth;
 
     // private JComboBox packingMode;
 
@@ -44,11 +45,15 @@ public class GridControlPanel extends VerticallyStackedPanel implements IConnect
         addLabeledComponent(imageBorderWidth, "Image border");
         addLabeledComponent(groupBorderWidth, "Group border");
         add(Box.createVerticalGlue());
+        
+        panelDimension = new BinaryCombiner<Double, Double, double[]>(panelWidth.observable, panelHeight.observable, (x, y) -> new double[] {x, y});
+        tilesNumber = new BinaryCombiner<Integer, Integer, int[]>(nRows.observable, nColumns.observable, (x, y) -> new int[] {x, y});
     }
 
     @Override
     public void onPublication(IPublicationVisitor pub) {
-
+        pub.publishObservable("PanelDimension", panelDimension);
+        pub.publishObservable("TilesNumber", tilesNumber);
     }
 
     @SuppressWarnings("unchecked")

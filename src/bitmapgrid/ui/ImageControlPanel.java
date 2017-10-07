@@ -150,6 +150,7 @@ public class ImageControlPanel extends VerticallyStackedPanel implements IConnec
     @Override
     public void onPublication(IPublicationVisitor pub) {
         pub.publishObservable("imageDimensions", imageDimensions);
+        pub.publishObservable("SourceImage", image);
     }
 
     @Override

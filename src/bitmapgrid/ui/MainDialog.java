@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+import bitmapgrid.model.DocumentModelDispatcher;
 import bitmapgrid.observable.HubConnector;
 
 public class MainDialog {
@@ -31,6 +32,7 @@ public class MainDialog {
         HubConnector hub = new HubConnector();
         hub.connectables.add(imPanel);
         hub.connectables.add(grPanel);
+        hub.connectables.add(new DocumentModelDispatcher());
         tabbedPane.addTab("Image", imPanel);
         tabbedPane.addTab("Arrangement", grPanel);
         mainPanel.add(tabbedPane, BorderLayout.LINE_START);
