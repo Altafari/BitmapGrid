@@ -9,7 +9,6 @@ import bitmapgrid.observable.IConnectable;
 import bitmapgrid.observable.IObservable;
 import bitmapgrid.observable.IPublicationVisitor;
 import bitmapgrid.observable.ISubscriptionVisitor;
-import bitmapgrid.observable.Observable;
 
 public class GridControlPanel extends VerticallyStackedPanel implements IConnectable {
 

@@ -2,8 +2,8 @@ package bitmapgrid.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Dimension;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,8 +24,8 @@ public class MainDialog {
 
     private static void addComponentsToPane(Container pane) {
         JPanel mainPanel = new JPanel();
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setPreferredSize(new Dimension(60, 70));
+        ScrollableDocumentView docView = new ScrollableDocumentView(new ImageIcon());
+        JScrollPane scrollPane = new JScrollPane(docView);
         JTabbedPane tabbedPane = new JTabbedPane();
         ImageControlPanel imPanel = new ImageControlPanel();
         GridControlPanel grPanel = new GridControlPanel();
@@ -33,6 +33,7 @@ public class MainDialog {
         hub.connectables.add(imPanel);
         hub.connectables.add(grPanel);
         hub.connectables.add(new DocumentModelDispatcher());
+        hub.connectables.add(docView);
         tabbedPane.addTab("Image", imPanel);
         tabbedPane.addTab("Arrangement", grPanel);
         mainPanel.add(tabbedPane, BorderLayout.LINE_START);
