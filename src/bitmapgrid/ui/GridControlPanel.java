@@ -59,7 +59,7 @@ public class GridControlPanel extends VerticallyStackedPanel implements IConnect
     @SuppressWarnings("unchecked")
     @Override
     public void onSubscription(ISubscriptionVisitor sub) {
-        IObservable<double[]> imageDimensions = (IObservable<double[]>) sub.retrieveObservable("imageDimensions");
+        IObservable<double[]> imageDimensions = (IObservable<double[]>) sub.retrieveObservable("ImageDimensions");
 
         IObservable<Integer> maxColumns = new BinaryCombiner<Double, double[], Integer>(panelWidth.observable, imageDimensions,
                 (w, s) -> (int) Math.floor(w / s[0]));
