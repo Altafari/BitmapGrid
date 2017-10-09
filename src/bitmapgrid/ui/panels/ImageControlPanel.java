@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import bitmapgrid.controls.InfoTextField;
@@ -41,6 +42,7 @@ public class ImageControlPanel extends VerticallyStackedPanel implements IConnec
     private JButton selectFileButton;
 
     public ImageControlPanel() {
+
         dpi = new Observable<Double>();
 
         imageSizeLabel = new InfoTextField<int[]>() {

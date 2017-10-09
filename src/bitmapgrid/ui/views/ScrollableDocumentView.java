@@ -1,4 +1,4 @@
-package bitmapgrid.ui.panels;
+package bitmapgrid.ui.views;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;

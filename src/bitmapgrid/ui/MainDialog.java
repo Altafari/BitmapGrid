@@ -4,7 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -13,7 +15,7 @@ import bitmapgrid.model.DocumentModelDispatcher;
 import bitmapgrid.observable.HubConnector;
 import bitmapgrid.ui.panels.GridControlPanel;
 import bitmapgrid.ui.panels.ImageControlPanel;
-import bitmapgrid.ui.panels.ScrollableDocumentView;
+import bitmapgrid.ui.views.ScrollableDocumentView;
 
 public class MainDialog {
     private static void createAndShowGUI() {
@@ -22,11 +24,10 @@ public class MainDialog {
         addComponentsToPane(frame.getContentPane());
         frame.pack();
         frame.setVisible(true);
-        frame.setResizable(false);
+        frame.setResizable(true);
     }
 
     private static void addComponentsToPane(Container pane) {
-        JPanel mainPanel = new JPanel();
         ScrollableDocumentView docView = new ScrollableDocumentView(new ImageIcon());
         JScrollPane scrollPane = new JScrollPane(docView);
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -39,9 +40,9 @@ public class MainDialog {
         hub.connectables.add(docView);
         tabbedPane.addTab("Image", imPanel);
         tabbedPane.addTab("Arrangement", grPanel);
-        mainPanel.add(tabbedPane, BorderLayout.LINE_START);
-        mainPanel.add(scrollPane, BorderLayout.CENTER);
-        pane.add(mainPanel);
+        pane.add(tabbedPane, BorderLayout.LINE_START);
+        pane.add(scrollPane, BorderLayout.CENTER);
+        //pane.add(mainPanel);
         hub.wireUp();
     }
 
