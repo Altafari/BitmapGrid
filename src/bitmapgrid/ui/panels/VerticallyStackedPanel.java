@@ -1,4 +1,4 @@
-package bitmapgrid.ui;
+package bitmapgrid.ui.panels;
 
 import java.awt.Component;
 import java.awt.Dimension;

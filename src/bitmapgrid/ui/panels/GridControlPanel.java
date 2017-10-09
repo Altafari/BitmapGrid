@@ -1,4 +1,4 @@
-package bitmapgrid.ui;
+package bitmapgrid.ui.panels;
 
 import javax.swing.Box;
 

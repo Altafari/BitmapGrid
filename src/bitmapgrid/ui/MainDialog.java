@@ -11,6 +11,9 @@ import javax.swing.JTabbedPane;
 
 import bitmapgrid.model.DocumentModelDispatcher;
 import bitmapgrid.observable.HubConnector;
+import bitmapgrid.ui.panels.GridControlPanel;
+import bitmapgrid.ui.panels.ImageControlPanel;
+import bitmapgrid.ui.panels.ScrollableDocumentView;
 
 public class MainDialog {
     private static void createAndShowGUI() {
