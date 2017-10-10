@@ -15,6 +15,7 @@ import bitmapgrid.observable.IObserver;
 import bitmapgrid.observable.IPublicationVisitor;
 import bitmapgrid.observable.ISubscriptionVisitor;
 import bitmapgrid.observable.Observable;
+import bitmapgrid.observable.Signal;
 
 public class DocumentModelDispatcher implements IConnectable {
 
@@ -23,8 +24,8 @@ public class DocumentModelDispatcher implements IConnectable {
     }
     
     private final Observable<BufferedImage> documentImage;
-    private final ArrayList<String> docParamsList;
-    private final Map<String, Object> docParamsCache;
+    private final ArrayList<Signal> docParamsList;
+    private final Map<Signal, Object> docParamsCache;
     private final Timer dbTimer;
     private final int DEBOUNCE_TIME_MS = 50;
     private DebounceState dbState;
@@ -57,13 +58,13 @@ public class DocumentModelDispatcher implements IConnectable {
     
     @Override
     public void onPublication(IPublicationVisitor pub) {
-        pub.publishObservable("DocumentImage", documentImage);
+        pub.publishObservable(Signal.DocumentImage, documentImage);
     }
 
     @SuppressWarnings({ "unchecked" })
     @Override
     public void onSubscription(ISubscriptionVisitor sub) {
-        for (String s : docParamsList) {
+        for (Signal s : docParamsList) {
             ((IObservable<Object>) sub.retrieveObservable(s)).addObserver(new IObserver<Object>() {
                 @Override
                 public void notifyChanged(Object newVal) {
@@ -74,18 +75,18 @@ public class DocumentModelDispatcher implements IConnectable {
         }
     }
     
-    private ArrayList<String> initializeDocumentParametersList() {
-        ArrayList<String> res = new ArrayList<String>();
-        res.add("PanelDimension");
-        res.add("TilesNumber");
-        res.add("SourceImage");
-        res.add("ImageDpi");
+    private ArrayList<Signal> initializeDocumentParametersList() {
+        ArrayList<Signal> res = new ArrayList<Signal>();
+        res.add(Signal.PanelDimension);
+        res.add(Signal.TilesNumber);
+        res.add(Signal.SourceImage);
+        res.add(Signal.ImageDpi);
         return res;
     }
     
-    private Map<String, Object> initializeDocumentParametersCache() {
-        Map<String, Object> res = new HashMap<String, Object>(docParamsList.size());
-        for (String s : docParamsList) {
+    private Map<Signal, Object> initializeDocumentParametersCache() {
+        Map<Signal, Object> res = new HashMap<Signal, Object>(docParamsList.size());
+        for (Signal s : docParamsList) {
             res.put(s, null);
         }
         return res;

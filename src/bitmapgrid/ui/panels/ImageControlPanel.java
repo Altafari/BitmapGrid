@@ -12,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import bitmapgrid.controls.InfoTextField;
@@ -23,6 +22,7 @@ import bitmapgrid.observable.IObservable;
 import bitmapgrid.observable.IPublicationVisitor;
 import bitmapgrid.observable.ISubscriptionVisitor;
 import bitmapgrid.observable.Observable;
+import bitmapgrid.observable.Signal;
 
 public class ImageControlPanel extends VerticallyStackedPanel implements IConnectable {
 
@@ -151,9 +151,9 @@ public class ImageControlPanel extends VerticallyStackedPanel implements IConnec
 
     @Override
     public void onPublication(IPublicationVisitor pub) {
-        pub.publishObservable("ImageDimensions", imageDimensions);
-        pub.publishObservable("SourceImage", image);
-        pub.publishObservable("ImageDpi", dpi);
+        pub.publishObservable(Signal.ImageDimension, imageDimensions);
+        pub.publishObservable(Signal.SourceImage, image);
+        pub.publishObservable(Signal.ImageDpi, dpi);
     }
 
     @Override

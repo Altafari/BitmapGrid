@@ -15,6 +15,7 @@ import bitmapgrid.observable.IObservable;
 import bitmapgrid.observable.IObserver;
 import bitmapgrid.observable.IPublicationVisitor;
 import bitmapgrid.observable.ISubscriptionVisitor;
+import bitmapgrid.observable.Signal;
 
 public class ScrollableDocumentView extends JLabel implements Scrollable, IConnectable {
 
@@ -79,7 +80,7 @@ public class ScrollableDocumentView extends JLabel implements Scrollable, IConne
     @SuppressWarnings("unchecked")
     @Override
     public void onSubscription(ISubscriptionVisitor sub) {
-        IObservable<BufferedImage> obs = (IObservable<BufferedImage>) sub.retrieveObservable("SourceImage");
+        IObservable<BufferedImage> obs = (IObservable<BufferedImage>) sub.retrieveObservable(Signal.SourceImage);
         obs.addObserver(new IObserver<BufferedImage>() {
             @Override
             public void notifyChanged(BufferedImage newVal) {

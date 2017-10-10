@@ -1,5 +1,5 @@
 package bitmapgrid.observable;
 
 public interface ISubscriptionVisitor {
-    public Object retrieveObservable(String name);
+    public Object retrieveObservable(Signal sig);
 }

@@ -7,11 +7,11 @@ import java.util.Map;
 public class HubConnector implements IPublicationVisitor, ISubscriptionVisitor {
 
     public final ArrayList<IConnectable> connectables;
-    public final Map<String, Object> nodes;
+    public final Map<Signal, Object> nodes;
 
     public HubConnector() {
         connectables = new ArrayList<IConnectable>();
-        nodes = new HashMap<String, Object>();
+        nodes = new HashMap<Signal, Object>();
     }
 
     public void wireUp() {
@@ -24,18 +24,18 @@ public class HubConnector implements IPublicationVisitor, ISubscriptionVisitor {
     }
 
     @Override
-    public void publishObservable(String name, Object obs) {
-        if (nodes.containsKey(name)) {
-            throw new IllegalArgumentException("Name " + name + " is already published");
+    public void publishObservable(Signal sig, Object obs) {
+        if (nodes.containsKey(sig)) {
+            throw new IllegalArgumentException("Name " + sig + " is already published");
         }
-        nodes.put(name, obs);
+        nodes.put(sig, obs);
     }
 
     @Override
-    public Object retrieveObservable(String name) {
-        if (!nodes.containsKey(name)) {
-            throw new IllegalArgumentException("Name " + name + "is not published");
+    public Object retrieveObservable(Signal sig) {
+        if (!nodes.containsKey(sig)) {
+            throw new IllegalArgumentException("Name " + sig + "is not published");
         }
-        return nodes.get(name);
+        return nodes.get(sig);
     }
 }

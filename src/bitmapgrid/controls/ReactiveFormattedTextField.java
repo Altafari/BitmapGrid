@@ -21,7 +21,7 @@ public abstract class ReactiveFormattedTextField<T> extends JFormattedTextField 
     public ReactiveFormattedTextField(Format fmt) {
         super(fmt);
         setHorizontalAlignment(RIGHT);
-        addActionListener(a -> observable.notifyObservers(observable.getObservableValue()));
+        addPropertyChangeListener(a -> observable.notifyObservers(observable.getObservableValue()));
     }
 
     @Override

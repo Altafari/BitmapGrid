@@ -9,6 +9,7 @@ import bitmapgrid.observable.IConnectable;
 import bitmapgrid.observable.IObservable;
 import bitmapgrid.observable.IPublicationVisitor;
 import bitmapgrid.observable.ISubscriptionVisitor;
+import bitmapgrid.observable.Signal;
 
 public class GridControlPanel extends VerticallyStackedPanel implements IConnectable {
 
@@ -51,14 +52,14 @@ public class GridControlPanel extends VerticallyStackedPanel implements IConnect
 
     @Override
     public void onPublication(IPublicationVisitor pub) {
-        pub.publishObservable("PanelDimension", panelDimension);
-        pub.publishObservable("TilesNumber", tilesNumber);
+        pub.publishObservable(Signal.PanelDimension, panelDimension);
+        pub.publishObservable(Signal.TilesNumber, tilesNumber);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void onSubscription(ISubscriptionVisitor sub) {
-        IObservable<double[]> imageDimensions = (IObservable<double[]>) sub.retrieveObservable("ImageDimensions");
+        IObservable<double[]> imageDimensions = (IObservable<double[]>) sub.retrieveObservable(Signal.ImageDimension);
 
         IObservable<Integer> maxColumns = new BinaryCombiner<Double, double[], Integer>(panelWidth.observable, imageDimensions,
                 (w, s) -> (int) Math.floor(w / s[0]));
