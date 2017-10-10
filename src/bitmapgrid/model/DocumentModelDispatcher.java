@@ -118,7 +118,8 @@ public class DocumentModelDispatcher implements IConnectable {
             System.out.println("Image DPI: " + imageDpi);
         }
         if (isValidParametersSet()) {
-            docModel.getUpdatedDocument(docParamsCache);
+            BufferedImage img = docModel.getUpdatedDocument(docParamsCache);
+            documentImage.notifyChanged(img);
         }
     }
 }

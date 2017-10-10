@@ -80,7 +80,7 @@ public class ScrollableDocumentView extends JLabel implements Scrollable, IConne
     @SuppressWarnings("unchecked")
     @Override
     public void onSubscription(ISubscriptionVisitor sub) {
-        IObservable<BufferedImage> obs = (IObservable<BufferedImage>) sub.retrieveObservable(Signal.SourceImage);
+        IObservable<BufferedImage> obs = (IObservable<BufferedImage>) sub.retrieveObservable(Signal.DocumentImage);
         obs.addObserver(new IObserver<BufferedImage>() {
             @Override
             public void notifyChanged(BufferedImage newVal) {

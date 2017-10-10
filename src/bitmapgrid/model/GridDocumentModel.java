@@ -1,5 +1,7 @@
 package bitmapgrid.model;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.Map;
@@ -21,7 +23,7 @@ public class GridDocumentModel implements IImageDocumentModel {
         int[] panelSize = new int[] { (int) Math.ceil(panelDims[0] * pixelPerMm), (int) Math.ceil(panelDims[1] * pixelPerMm) };
         createNewImageIfResized(panelSize);
         Point[][] location = computeTilesLocation(numTiles, panelSize, imageSize);
-        drawOutline(location, imageSize);
+        drawGrid(location, imageSize, srcImage);
         return image;
     }
     
@@ -32,7 +34,7 @@ public class GridDocumentModel implements IImageDocumentModel {
     }
     
     private Point[][] computeTilesLocation(int[] numTiles, int[] panelSize, int[] imageSize) {
-        int cols = numTiles[0], rows = numTiles[1];
+        int rows = numTiles[0], cols = numTiles[1];
         double xStep = (double) panelSize[0] / cols;
         double yStep = (double) panelSize[1] / rows;
         double xOffset = (xStep - imageSize[0]) / 2.0;
@@ -48,9 +50,15 @@ public class GridDocumentModel implements IImageDocumentModel {
         return res;
     }
     
-    private void drawOutline(Point[][] coords, int[] imageSize) {
-        
-    }
-    
-
+    private void drawGrid(Point[][] coords, int[] imageSize, BufferedImage srcImage) {
+        Graphics g = image.getGraphics();
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(0, 0, image.getWidth(), image.getHeight());
+        g.setColor(Color.pink);
+        for (Point[] pArr : coords) {
+            for (Point p : pArr) {
+                g.drawImage(srcImage, p.x, p.y, null);
+            }
+        }
+     }
 }
