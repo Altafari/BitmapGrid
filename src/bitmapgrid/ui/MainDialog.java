@@ -4,13 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.ImageIcon;
-import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+import bitmapgrid.controls.ZoomControl;
 import bitmapgrid.model.DocumentModelDispatcher;
 import bitmapgrid.observable.HubConnector;
 import bitmapgrid.ui.panels.GridControlPanel;
@@ -42,7 +40,7 @@ public class MainDialog {
         tabbedPane.addTab("Arrangement", grPanel);
         pane.add(tabbedPane, BorderLayout.LINE_START);
         pane.add(scrollPane, BorderLayout.CENTER);
-        //pane.add(mainPanel);
+        pane.add(new ZoomControl(), BorderLayout.LINE_END);
         hub.wireUp();
     }
 
