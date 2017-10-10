@@ -3,6 +3,8 @@ package bitmapgrid.model;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
+import bitmapgrid.observable.Signal;
+
 public interface IImageDocumentModel {
-    BufferedImage getUpdatedDocument(Map<String, Object> parameters);
+    BufferedImage getUpdatedDocument(Map<Signal, Object> parameters);
 }

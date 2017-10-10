@@ -25,15 +25,19 @@ public class DocumentModelDispatcher implements IConnectable {
     
     private final Observable<BufferedImage> documentImage;
     private final ArrayList<Signal> docParamsList;
+    private final ArrayList<Signal> mandatoryParams;
     private final Map<Signal, Object> docParamsCache;
     private final Timer dbTimer;
-    private final int DEBOUNCE_TIME_MS = 50;
+    private final int DEBOUNCE_TIME_MS = 10;
     private DebounceState dbState;
     private int triggerCounter;
+    
+    private IImageDocumentModel docModel;
     
     public DocumentModelDispatcher() {
         documentImage = new Observable<BufferedImage>();
         docParamsList = initializeDocumentParametersList();
+        mandatoryParams = docParamsList;
         docParamsCache = initializeDocumentParametersCache();
         dbState = DebounceState.READY;
         ActionListener timerEvent = new ActionListener() {
@@ -52,7 +56,10 @@ public class DocumentModelDispatcher implements IConnectable {
                 }
             }
         };
-        dbTimer = new Timer(DEBOUNCE_TIME_MS, timerEvent);
+        
+        docModel = new GridDocumentModel();
+        
+        dbTimer = new Timer(DEBOUNCE_TIME_MS, timerEvent);        
         dbTimer.start();
     }
     
@@ -80,7 +87,7 @@ public class DocumentModelDispatcher implements IConnectable {
         res.add(Signal.PanelDimension);
         res.add(Signal.TilesNumber);
         res.add(Signal.SourceImage);
-        res.add(Signal.ImageDpi);
+        res.add(Signal.PixelPerMm);
         return res;
     }
     
@@ -92,20 +99,26 @@ public class DocumentModelDispatcher implements IConnectable {
         return res;
     }
     
+    private boolean isValidParametersSet() {
+        return mandatoryParams.stream().map(k -> docParamsCache.get(k)).allMatch(v -> v != null);
+    }
+    
     private void onParametersUpdate() {
         System.out.println("Update # " + triggerCounter++);
-        double[] panelDimension = (double[]) docParamsCache.get("PanelDimension");
+        double[] panelDimension = (double[]) docParamsCache.get(Signal.PanelDimension);
         if (panelDimension != null) {
             System.out.println("Panel dimensions: W = " + panelDimension[0] + ", H = " + panelDimension[1]);
         }
-        int[] tilesNumber = (int[]) docParamsCache.get("TilesNumber");
+        int[] tilesNumber = (int[]) docParamsCache.get(Signal.TilesNumber);
         if (tilesNumber != null) {
             System.out.println("Columns: " + tilesNumber[0] + ", Rows: " + tilesNumber[1]);
         }
-        Double imageDpi = (Double) docParamsCache.get("ImageDpi");
+        Double imageDpi = (Double) docParamsCache.get(Signal.ImageDpi);
         if (imageDpi != null) {
             System.out.println("Image DPI: " + imageDpi);
         }
+        if (isValidParametersSet()) {
+            docModel.getUpdatedDocument(docParamsCache);
+        }
     }
-
 }

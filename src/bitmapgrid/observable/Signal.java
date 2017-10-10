@@ -6,5 +6,6 @@ public enum Signal {
     TilesNumber,
     SourceImage,
     ImageDpi,
+    PixelPerMm,
     ImageDimension,
 }

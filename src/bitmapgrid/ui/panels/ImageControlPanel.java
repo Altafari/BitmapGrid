@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import bitmapgrid.controls.InfoTextField;
+import bitmapgrid.controls.ReactiveNumberField;
 import bitmapgrid.observable.BinaryCombiner;
 import bitmapgrid.observable.FunctionMapper;
 import bitmapgrid.observable.IConnectable;
@@ -29,21 +30,19 @@ public class ImageControlPanel extends VerticallyStackedPanel implements IConnec
     public final Observable<BufferedImage> image;
     public final IObservable<int[]> imageSize;
     public final IObservable<double[]> imageDimensions;
-    public final Observable<Double> dpi;
+    public final IObservable<Double> pixelPerMm;
 
     private static final long serialVersionUID = 1L;
 
     private InfoTextField<int[]> imageSizeLabel;
     private InfoTextField<double[]> imageDimsLabel;
-    private JFormattedTextField dpiField;
+    private ReactiveNumberField dpiField;
     private InfoTextField<File> fileNameLabel;
     private JFileChooser fileChooser;
     private Observable<File> file;
     private JButton selectFileButton;
 
     public ImageControlPanel() {
-
-        dpi = new Observable<Double>();
 
         imageSizeLabel = new InfoTextField<int[]>() {
             private static final long serialVersionUID = 1L;
@@ -71,10 +70,8 @@ public class ImageControlPanel extends VerticallyStackedPanel implements IConnec
             }
         };
 
-        dpiField = new JFormattedTextField(NumberFormat.getNumberInstance());
-        dpiField.setHorizontalAlignment(JFormattedTextField.RIGHT);
-        dpiField.addActionListener(a -> dpi.notifyChanged(((Number) dpiField.getValue()).doubleValue()));
-        dpi.addObserver(val -> dpiField.setValue(val));
+        dpiField = new ReactiveNumberField();        
+        pixelPerMm = new FunctionMapper<Double, Double>(dpiField.observable, x -> x / 25.4);
 
         fileNameLabel = new InfoTextField<File>() {
             private static final long serialVersionUID = 1L;
@@ -126,11 +123,13 @@ public class ImageControlPanel extends VerticallyStackedPanel implements IConnec
         imageSize = new FunctionMapper<BufferedImage, int[]>(image, i -> new int[] { i.getWidth(), i.getHeight() });
         imageSize.addObserver(imageSizeLabel);
 
-        imageDimensions = new BinaryCombiner<int[], Double, double[]>(imageSize, dpi, (size, dpi) -> computeImageDimensions(dpi, size));
+        imageDimensions = new BinaryCombiner<int[], Double, double[]>(imageSize, pixelPerMm,
+                (size, ppm) -> new double[] { size[0] / ppm, size[1] / ppm });
+
         imageDimensions.addObserver(imageDimsLabel);
 
         image.notifyChanged(null);
-        dpi.notifyChanged(900.0);
+        dpiField.notifyChanged(900.0);
 
         addLabeledComponent(imageSizeLabel, "Image size");
         addLabeledComponent(imageDimsLabel, "Image dims");
@@ -145,15 +144,12 @@ public class ImageControlPanel extends VerticallyStackedPanel implements IConnec
         return new Dimension(100, this.PREFERRED_SIZE.height);
     }
 
-    private double[] computeImageDimensions(Double dpi, int[] size) {
-        return new double[] { (size[0] * 25.4) / dpi, (size[1] * 25.4) / dpi };
-    }
-
     @Override
     public void onPublication(IPublicationVisitor pub) {
         pub.publishObservable(Signal.ImageDimension, imageDimensions);
         pub.publishObservable(Signal.SourceImage, image);
-        pub.publishObservable(Signal.ImageDpi, dpi);
+        pub.publishObservable(Signal.ImageDpi, dpiField.observable);
+        pub.publishObservable(Signal.PixelPerMm, pixelPerMm);
     }
 
     @Override
