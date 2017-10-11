@@ -27,7 +27,7 @@ public class ZoomControl extends JPanel {
     private static final int INSET = 5;
     private final JButton btnIn, btnOut;
     private final JSlider slider;
-    private final Dimension sliderSize = new Dimension(40, 160);
+    private final Dimension sliderSize = new Dimension(30, 160);
     
     public ZoomControl() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -48,6 +48,7 @@ public class ZoomControl extends JPanel {
         add(slider);
         add(Box.createVerticalStrut(INSET));
         add(btnOut);
+        setOpaque(false);
     }
 
 }

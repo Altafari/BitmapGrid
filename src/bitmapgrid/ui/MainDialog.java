@@ -5,6 +5,7 @@ import java.awt.Container;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
@@ -13,6 +14,7 @@ import bitmapgrid.model.DocumentModelDispatcher;
 import bitmapgrid.observable.HubConnector;
 import bitmapgrid.ui.panels.GridControlPanel;
 import bitmapgrid.ui.panels.ImageControlPanel;
+import bitmapgrid.ui.views.CustomLayeredPane;
 import bitmapgrid.ui.views.ScrollableDocumentView;
 
 public class MainDialog {
@@ -39,8 +41,8 @@ public class MainDialog {
         tabbedPane.addTab("Image", imPanel);
         tabbedPane.addTab("Arrangement", grPanel);
         pane.add(tabbedPane, BorderLayout.LINE_START);
-        pane.add(scrollPane, BorderLayout.CENTER);
-        pane.add(new ZoomControl(), BorderLayout.LINE_END);
+        JLayeredPane clp = new CustomLayeredPane(scrollPane, new ZoomControl());
+        pane.add(clp, BorderLayout.CENTER);
         hub.wireUp();
     }
 
