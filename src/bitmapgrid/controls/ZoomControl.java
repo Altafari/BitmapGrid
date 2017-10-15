@@ -61,6 +61,8 @@ public class ZoomControl extends JPanel implements IConnectable {
         slider.setPaintTicks(true);
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(9);
+        slider.putClientProperty("JSlider.isFilled", false);
+        slider.setOpaque(false);
         slider.addChangeListener(e -> obs.notifyObservers(getZoom()));
         add(btnIn);
         add(Box.createVerticalStrut(INSET));

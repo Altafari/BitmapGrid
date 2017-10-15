@@ -21,11 +21,10 @@ public class ScrollableDocumentView extends JLabel implements Scrollable, IConne
 
     private static final long serialVersionUID = 1L;
     private final Dimension defaultPreferredDimension = new Dimension(800, 600);
-    private final ImageIcon imageIcon;
+    private ImageIcon imageIcon;
 
-    public ScrollableDocumentView(ImageIcon i) {
-        super(i);
-        imageIcon = i;
+    public ScrollableDocumentView() {
+        super((ImageIcon) null);
         setAutoscrolls(true);
         addMouseMotionListener(new MouseMotionListener() {
             @Override
@@ -42,7 +41,7 @@ public class ScrollableDocumentView extends JLabel implements Scrollable, IConne
     
     @Override
     public Dimension getPreferredSize() {
-        if (imageIcon.getImage() == null) {
+        if (imageIcon == null) {
             return defaultPreferredDimension;
         } else {
             return super.getPreferredSize();
@@ -84,8 +83,15 @@ public class ScrollableDocumentView extends JLabel implements Scrollable, IConne
         obs.addObserver(new IObserver<BufferedImage>() {
             @Override
             public void notifyChanged(BufferedImage newVal) {
-                imageIcon.setImage(newVal);
+                if (newVal == null) {
+                    imageIcon = null;
+                } else {
+                    imageIcon = new ImageIcon(newVal);
+                }
+                setIcon(imageIcon);
                 revalidate();
+                repaint();
+                update(getGraphics());
             }
         });
     }

@@ -29,7 +29,7 @@ public class MainDialog {
     }
 
     private static void addComponentsToPane(Container pane) {
-        ScrollableDocumentView docView = new ScrollableDocumentView(new ImageIcon());
+        ScrollableDocumentView docView = new ScrollableDocumentView();
         JScrollPane scrollPane = new JScrollPane(docView);
         JTabbedPane tabbedPane = new JTabbedPane();
         ImageControlPanel imPanel = new ImageControlPanel();

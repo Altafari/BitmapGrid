@@ -12,11 +12,13 @@ public class GridDocumentModel implements IImageDocumentModel {
     
     @Override
     public BufferedImage getUpdatedDocument(Map<Signal, Object> parameters) {
-        
+        int[] numTiles = (int[]) parameters.get(Signal.TilesNumber);
+        if (numTiles[0] < 1 || numTiles[1] < 1) {
+            return null;
+        }
         BufferedImage srcImage = (BufferedImage) parameters.get(Signal.SourceImage);
         int[] imageSize = new int[] { srcImage.getWidth(), srcImage.getHeight() };
         Double pixelPerMm = (Double) parameters.get(Signal.PixelPerMm);
-        int[] numTiles = (int[]) parameters.get(Signal.TilesNumber);
         double[] panelDims = (double[]) parameters.get(Signal.PanelDimension);
         int[] panelSize = new int[] { (int) Math.ceil(panelDims[0] * pixelPerMm), (int) Math.ceil(panelDims[1] * pixelPerMm) };
         BufferedImage dstImage = new BufferedImage(panelSize[0], panelSize[1], BufferedImage.TYPE_INT_RGB);

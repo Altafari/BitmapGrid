@@ -21,7 +21,7 @@ public class ReactiveIntegerSpinner extends ReactiveSpinner<Integer> {
     };
 
     public ReactiveIntegerSpinner() {
-        this(1, 1, 1);
+        this(0, 0, 0);
     }
 
     public ReactiveIntegerSpinner(int value, int minVal, int maxVal) {
