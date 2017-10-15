@@ -1,7 +1,7 @@
 package bitmapgrid.model;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.Map;
@@ -9,8 +9,6 @@ import java.util.Map;
 import bitmapgrid.observable.Signal;
 
 public class GridDocumentModel implements IImageDocumentModel {
-    
-    private BufferedImage image; 
     
     @Override
     public BufferedImage getUpdatedDocument(Map<Signal, Object> parameters) {
@@ -21,16 +19,10 @@ public class GridDocumentModel implements IImageDocumentModel {
         int[] numTiles = (int[]) parameters.get(Signal.TilesNumber);
         double[] panelDims = (double[]) parameters.get(Signal.PanelDimension);
         int[] panelSize = new int[] { (int) Math.ceil(panelDims[0] * pixelPerMm), (int) Math.ceil(panelDims[1] * pixelPerMm) };
-        createNewImageIfResized(panelSize);
+        BufferedImage dstImage = new BufferedImage(panelSize[0], panelSize[1], BufferedImage.TYPE_INT_RGB);
         Point[][] location = computeTilesLocation(numTiles, panelSize, imageSize);
-        drawGrid(location, imageSize, srcImage);
-        return image;
-    }
-    
-    private void createNewImageIfResized(int[] dims) {
-        if (image == null || image.getWidth() != dims[0] || image.getHeight() != dims[1]) {
-            image = new BufferedImage(dims[0], dims[1], BufferedImage.TYPE_INT_RGB);
-        }
+        drawGrid(dstImage, location, imageSize, srcImage);
+        return dstImage;
     }
     
     private Point[][] computeTilesLocation(int[] numTiles, int[] panelSize, int[] imageSize) {
@@ -50,15 +42,16 @@ public class GridDocumentModel implements IImageDocumentModel {
         return res;
     }
     
-    private void drawGrid(Point[][] coords, int[] imageSize, BufferedImage srcImage) {
-        Graphics g = image.getGraphics();
+    private void drawGrid(BufferedImage dstImage, Point[][] coords, int[] imageSize, BufferedImage srcImage) {
+        Graphics2D g = dstImage.createGraphics();
         g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(0, 0, image.getWidth(), image.getHeight());
+        g.fillRect(0, 0, dstImage.getWidth(), dstImage.getHeight());
         g.setColor(Color.pink);
         for (Point[] pArr : coords) {
             for (Point p : pArr) {
                 g.drawImage(srcImage, p.x, p.y, null);
             }
         }
+        g.dispose();
      }
 }

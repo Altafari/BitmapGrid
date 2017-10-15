@@ -8,8 +8,17 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
-public class ZoomControl extends JPanel {
+import bitmapgrid.observable.IConnectable;
+import bitmapgrid.observable.IObservable;
+import bitmapgrid.observable.IPublicationVisitor;
+import bitmapgrid.observable.ISubscriptionVisitor;
+import bitmapgrid.observable.ObservableCore;
+import bitmapgrid.observable.Signal;
 
+public class ZoomControl extends JPanel implements IConnectable {
+
+    public final IObservable<Double> observable;
+    
     private class ZoomButton extends JButton {
 
         private static final long serialVersionUID = 1L;
@@ -30,10 +39,19 @@ public class ZoomControl extends JPanel {
     private final Dimension sliderSize = new Dimension(30, 160);
     
     public ZoomControl() {
+        
+        ObservableCore<Double> obs = new ObservableCore<Double>() {
+            @Override
+            public Double getObservableValue() {
+                return getZoom();
+            }
+        };
+        
+        observable = obs;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         btnIn = new ZoomButton("+");
         btnOut = new ZoomButton("-");
-        slider = new JSlider(JSlider.VERTICAL, 0, 9, 5);
+        slider = new JSlider(JSlider.VERTICAL, 0, 9, 4);
         btnIn.setAlignmentX(CENTER_ALIGNMENT);
         btnOut.setAlignmentX(CENTER_ALIGNMENT);
         slider.setAlignmentX(CENTER_ALIGNMENT);
@@ -43,6 +61,7 @@ public class ZoomControl extends JPanel {
         slider.setPaintTicks(true);
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(9);
+        slider.addChangeListener(e -> obs.notifyObservers(getZoom()));
         add(btnIn);
         add(Box.createVerticalStrut(INSET));
         add(slider);
@@ -50,5 +69,17 @@ public class ZoomControl extends JPanel {
         add(btnOut);
         setOpaque(false);
     }
+    
+    private Double getZoom() {
+        return (slider.getValue() + 1.0) * 0.2;
+    }
+
+    @Override
+    public void onPublication(IPublicationVisitor pub) {
+        pub.publishObservable(Signal.DocumentZoom, observable);
+    }
+
+    @Override
+    public void onSubscription(ISubscriptionVisitor sub) {}
 
 }

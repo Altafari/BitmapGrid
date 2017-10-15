@@ -32,7 +32,7 @@ public class HubConnector implements IPublicationVisitor, ISubscriptionVisitor {
     }
 
     @Override
-    public Object retrieveObservable(Signal sig) {
+    public Object getObservable(Signal sig) {
         if (!nodes.containsKey(sig)) {
             throw new IllegalArgumentException("Name " + sig + "is not published");
         }

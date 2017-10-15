@@ -72,7 +72,7 @@ public class DocumentModelDispatcher implements IConnectable {
     @Override
     public void onSubscription(ISubscriptionVisitor sub) {
         for (Signal s : docParamsList) {
-            ((IObservable<Object>) sub.retrieveObservable(s)).addObserver(new IObserver<Object>() {
+            ((IObservable<Object>) sub.getObservable(s)).addObserver(new IObserver<Object>() {
                 @Override
                 public void notifyChanged(Object newVal) {
                     docParamsCache.put(s, newVal);

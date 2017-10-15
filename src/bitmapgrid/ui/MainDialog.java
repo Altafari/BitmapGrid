@@ -11,6 +11,7 @@ import javax.swing.JTabbedPane;
 
 import bitmapgrid.controls.ZoomControl;
 import bitmapgrid.model.DocumentModelDispatcher;
+import bitmapgrid.model.ZoomableImageView;
 import bitmapgrid.observable.HubConnector;
 import bitmapgrid.ui.panels.GridControlPanel;
 import bitmapgrid.ui.panels.ImageControlPanel;
@@ -33,15 +34,18 @@ public class MainDialog {
         JTabbedPane tabbedPane = new JTabbedPane();
         ImageControlPanel imPanel = new ImageControlPanel();
         GridControlPanel grPanel = new GridControlPanel();
+        ZoomControl zoomCtrl = new ZoomControl();
         HubConnector hub = new HubConnector();
         hub.connectables.add(imPanel);
         hub.connectables.add(grPanel);
         hub.connectables.add(new DocumentModelDispatcher());
         hub.connectables.add(docView);
+        hub.connectables.add(new ZoomableImageView());
+        hub.connectables.add(zoomCtrl);
         tabbedPane.addTab("Image", imPanel);
         tabbedPane.addTab("Arrangement", grPanel);
         pane.add(tabbedPane, BorderLayout.LINE_START);
-        JLayeredPane clp = new CustomLayeredPane(scrollPane, new ZoomControl());
+        JLayeredPane clp = new CustomLayeredPane(scrollPane, zoomCtrl);
         pane.add(clp, BorderLayout.CENTER);
         hub.wireUp();
     }
