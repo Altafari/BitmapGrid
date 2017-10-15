@@ -1,9 +1,13 @@
 package bitmapgrid.controls;
 
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.Box;
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -22,10 +26,21 @@ public class ZoomControl extends JPanel implements IConnectable {
     private class ZoomButton extends JButton {
 
         private static final long serialVersionUID = 1L;
-        private final Dimension dims = new Dimension(40, 40);
+        private final Dimension dims = new Dimension(36, 36);
 
-        public ZoomButton(String s) {
-            super(s);
+        public ZoomButton(String imgFileName) {
+            super();
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(new File(imgFileName));
+                setIcon(new ImageIcon(img));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            setIcon(new ImageIcon(img));
+            setOpaque(false);
+            setContentAreaFilled(false);
+            setBorderPainted(false);
             setPreferredSize(dims);
             setMinimumSize(dims);
             setMaximumSize(dims);
@@ -33,10 +48,9 @@ public class ZoomControl extends JPanel implements IConnectable {
     }
     
     private static final long serialVersionUID = 1L;
-    private static final int INSET = 5;
     private final JButton btnIn, btnOut;
     private final JSlider slider;
-    private final Dimension sliderSize = new Dimension(30, 160);
+    private final Dimension sliderSize = new Dimension(30, 120);
     
     public ZoomControl() {
         
@@ -49,8 +63,8 @@ public class ZoomControl extends JPanel implements IConnectable {
         
         observable = obs;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        btnIn = new ZoomButton("+");
-        btnOut = new ZoomButton("-");
+        btnIn = new ZoomButton("resources/btzoomin.png");
+        btnOut = new ZoomButton("resources/btzoomout.png");
         slider = new JSlider(JSlider.VERTICAL, 0, 9, 4);
         btnIn.setAlignmentX(CENTER_ALIGNMENT);
         btnOut.setAlignmentX(CENTER_ALIGNMENT);
@@ -62,12 +76,11 @@ public class ZoomControl extends JPanel implements IConnectable {
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(9);
         slider.putClientProperty("JSlider.isFilled", false);
-        slider.setOpaque(false);
         slider.addChangeListener(e -> obs.notifyObservers(getZoom()));
+        btnIn.addActionListener(e -> slider.setValue(Math.min(slider.getMaximum(), slider.getValue() + 1)));
+        btnOut.addActionListener(e -> slider.setValue(Math.max(slider.getMinimum(), slider.getValue() - 1)));
         add(btnIn);
-        add(Box.createVerticalStrut(INSET));
         add(slider);
-        add(Box.createVerticalStrut(INSET));
         add(btnOut);
         setOpaque(false);
     }
