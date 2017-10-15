@@ -3,6 +3,7 @@ package bitmapgrid.model;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
@@ -13,7 +14,8 @@ public class GridDocumentModel implements IImageDocumentModel {
     @Override
     public BufferedImage getUpdatedDocument(Map<Signal, Object> parameters) {
         int[] numTiles = (int[]) parameters.get(Signal.TilesNumber);
-        if (numTiles[0] < 1 || numTiles[1] < 1) {
+        Double zoom = (Double) parameters.get(Signal.DocumentZoom);
+        if (numTiles[0] < 1 || numTiles[1] < 1 || zoom == 0.0) {
             return null;
         }
         BufferedImage srcImage = (BufferedImage) parameters.get(Signal.SourceImage);
@@ -21,9 +23,10 @@ public class GridDocumentModel implements IImageDocumentModel {
         Double pixelPerMm = (Double) parameters.get(Signal.PixelPerMm);
         double[] panelDims = (double[]) parameters.get(Signal.PanelDimension);
         int[] panelSize = new int[] { (int) Math.ceil(panelDims[0] * pixelPerMm), (int) Math.ceil(panelDims[1] * pixelPerMm) };
-        BufferedImage dstImage = new BufferedImage(panelSize[0], panelSize[1], BufferedImage.TYPE_INT_RGB);
+        int[] docSize = new int[] { (int) Math.ceil(panelSize[0] * zoom), (int) Math.ceil(panelSize[1] * zoom) };
+        BufferedImage dstImage = new BufferedImage(docSize[0], docSize[1], BufferedImage.TYPE_INT_RGB);
         Point[][] location = computeTilesLocation(numTiles, panelSize, imageSize);
-        drawGrid(dstImage, location, imageSize, srcImage);
+        drawGrid(dstImage, location, imageSize, srcImage, zoom);
         return dstImage;
     }
     
@@ -44,14 +47,16 @@ public class GridDocumentModel implements IImageDocumentModel {
         return res;
     }
     
-    private void drawGrid(BufferedImage dstImage, Point[][] coords, int[] imageSize, BufferedImage srcImage) {
+    private void drawGrid(BufferedImage dstImage, Point[][] coords, int[] imageSize, BufferedImage srcImage, double zoom) {
         Graphics2D g = dstImage.createGraphics();
         g.setColor(Color.LIGHT_GRAY);
         g.fillRect(0, 0, dstImage.getWidth(), dstImage.getHeight());
         g.setColor(Color.pink);
         for (Point[] pArr : coords) {
             for (Point p : pArr) {
-                g.drawImage(srcImage, p.x, p.y, null);
+                AffineTransform at = AffineTransform.getTranslateInstance(p.x * zoom, p.y * zoom);
+                at.scale(zoom, zoom);
+                g.drawImage(srcImage, at, null);
             }
         }
         g.dispose();

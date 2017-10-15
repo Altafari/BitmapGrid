@@ -88,6 +88,7 @@ public class DocumentModelDispatcher implements IConnectable {
         res.add(Signal.TilesNumber);
         res.add(Signal.SourceImage);
         res.add(Signal.PixelPerMm);
+        res.add(Signal.DocumentZoom);
         return res;
     }
     

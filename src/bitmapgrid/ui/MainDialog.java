@@ -3,7 +3,6 @@ package bitmapgrid.ui;
 import java.awt.BorderLayout;
 import java.awt.Container;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JScrollPane;
@@ -11,7 +10,6 @@ import javax.swing.JTabbedPane;
 
 import bitmapgrid.controls.ZoomControl;
 import bitmapgrid.model.DocumentModelDispatcher;
-import bitmapgrid.model.ZoomableImageView;
 import bitmapgrid.observable.HubConnector;
 import bitmapgrid.ui.panels.GridControlPanel;
 import bitmapgrid.ui.panels.ImageControlPanel;
@@ -40,7 +38,6 @@ public class MainDialog {
         hub.connectables.add(grPanel);
         hub.connectables.add(new DocumentModelDispatcher());
         hub.connectables.add(docView);
-        hub.connectables.add(new ZoomableImageView());
         hub.connectables.add(zoomCtrl);
         tabbedPane.addTab("Image", imPanel);
         tabbedPane.addTab("Arrangement", grPanel);
