@@ -80,6 +80,8 @@ public class DocumentModelDispatcher implements IConnectable {
                 }
             });
         }
+        Double currentZoom = ((IObservable<Double>) sub.getObservable(Signal.DocumentZoom)).getObservableValue();
+        docParamsCache.put(Signal.DocumentZoom, currentZoom);
     }
     
     private ArrayList<Signal> initializeDocumentParametersList() {
