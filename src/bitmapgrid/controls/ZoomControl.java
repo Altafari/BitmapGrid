@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -51,6 +53,11 @@ public class ZoomControl extends JPanel implements IConnectable {
     private final JButton btnIn, btnOut;
     private final JSlider slider;
     private final Dimension sliderSize = new Dimension(30, 120);
+    private final int zoomSteps = 10;
+    private final int initialState = 4;
+    private final double zoomRatio = 1.4;
+    private final double minZoom = 0.05;
+    private final Map<Integer, Double> zoomTable;
     
     public ZoomControl() {
         
@@ -65,7 +72,7 @@ public class ZoomControl extends JPanel implements IConnectable {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         btnIn = new ZoomButton("resources/btzoomin.png");
         btnOut = new ZoomButton("resources/btzoomout.png");
-        slider = new JSlider(JSlider.VERTICAL, 0, 9, 4);
+        slider = new JSlider(JSlider.VERTICAL, 0, zoomSteps - 1, initialState);
         btnIn.setAlignmentX(CENTER_ALIGNMENT);
         btnOut.setAlignmentX(CENTER_ALIGNMENT);
         slider.setAlignmentX(CENTER_ALIGNMENT);
@@ -74,7 +81,7 @@ public class ZoomControl extends JPanel implements IConnectable {
         slider.setMaximumSize(sliderSize);
         slider.setPaintTicks(true);
         slider.setMinorTickSpacing(1);
-        slider.setMajorTickSpacing(9);
+        slider.setMajorTickSpacing(zoomSteps - 1);
         slider.putClientProperty("JSlider.isFilled", false);
         slider.addChangeListener(e -> obs.notifyObservers(getZoom()));
         btnIn.addActionListener(e -> slider.setValue(Math.min(slider.getMaximum(), slider.getValue() + 1)));
@@ -83,10 +90,17 @@ public class ZoomControl extends JPanel implements IConnectable {
         add(slider);
         add(btnOut);
         setOpaque(false);
+        zoomTable = new HashMap<Integer, Double>();
+        double zoomVal = minZoom;
+        for(int i = 0; i < zoomSteps; i++) {
+            zoomTable.put(i, zoomVal);
+            zoomVal *= zoomRatio;
+        }
+        
     }
     
     private Double getZoom() {
-        return (slider.getValue() + 1.0) * 0.2;
+        return zoomTable.get(slider.getValue());
     }
 
     @Override
